@@ -1,0 +1,27 @@
+# dashboard Specification
+
+## Purpose
+TBD - created by archiving change add-initial-system-and-auth. Update Purpose after archive.
+## Requirements
+### Requirement: 모의고사 실행 및 데이터 링크 제공
+인증된 사용자는 회차별 모의고사 목록을 확인하고, 실습용 Google Colab 환경 및 데이터를 불러올 수 있어야 한다 (SHALL).
+
+#### Scenario: Colab 링크 연결
+- **WHEN** 사용자가 "모의고사 시작하기" 버튼을 클릭함
+- **THEN** 해당 회차의 Google Colab 노트북 URL이 새 탭에서 열림
+
+#### Scenario: 데이터 URL 복사 및 안내
+- **WHEN** 사용자가 실습 페이지 내 데이터 로드 안내 확인 시
+- **THEN** Pandas로 즉시 로드 가능한 URL을 제공하고, 간편하게 복사할 수 있는 기능을 제공함
+
+### Requirement: 결과 페이지 및 정답/해설 제공
+시스템은 사용자가 답안을 제출할 수 있는 링크와 시험 종료 후 정답 및 해설을 확인할 수 있는 기능을 제공해야 한다 (SHALL).
+
+#### Scenario: 구글 폼 제출 링크 연결
+- **WHEN** 사용자가 문제 풀이 완료 후 "답안 제출하기" 버튼을 클릭함
+- **THEN** 지정된 외부 구글 폼(Google Forms) 링크로 이동함
+
+#### Scenario: 정답 및 해설 노출
+- **WHEN** 사용자가 "정답 및 해설 보기" 버튼을 클릭함
+- **THEN** 해당 회차의 정답지 및 상세 해설 내용이 화면에 노출되거나 관련 문서 링크가 열림
+

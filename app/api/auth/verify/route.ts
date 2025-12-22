@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { validateAuthCode } from "@/lib/auth-logic";
+import { cookies } from "next/headers";
 
 export async function POST(request: NextRequest) {
     try {
@@ -19,6 +20,16 @@ export async function POST(request: NextRequest) {
         const isValid = validateAuthCode(code);
 
         if (isValid) {
+            // 인증 성공 시 쿠키 설정
+            const cookieStore = await cookies();
+            cookieStore.set("auth_token", "true", {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+                maxAge: 60 * 60 * 24, // 1일 유지
+            });
+
             return NextResponse.json({ success: true });
         } else {
             return NextResponse.json({ success: false, message: "유효하지 않은 코드입니다." }, { status: 401 });

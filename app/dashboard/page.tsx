@@ -13,7 +13,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Copy, FileText, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
 
 export default function DashboardPage() {
@@ -23,7 +22,7 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-black p-6 sm:p-12">
+        <div className="p-6 sm:p-12">
             <div className="max-w-5xl mx-auto space-y-8">
                 <header className="space-y-4">
                     <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -94,7 +93,6 @@ export default function DashboardPage() {
                     ))}
                 </div>
             </div>
-            <Toaster position="bottom-right" />
         </div>
     );
 }

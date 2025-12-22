@@ -21,7 +21,7 @@ export default async function SolutionPage({ params }: { params: Promise<{ id: s
     }
 
     return (
-        <div className="min-h-screen bg-white dark:bg-black p-6 sm:p-12">
+        <div className="p-6 sm:p-12">
             <div className="max-w-3xl mx-auto space-y-8">
                 <Button asChild variant="ghost" className="mb-4">
                     <Link href="/dashboard">

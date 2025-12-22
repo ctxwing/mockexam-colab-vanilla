@@ -2,16 +2,17 @@
  * 파일명: app/auth/page.tsx
  * 작성일자: 2025-12-22
  * 용도: 인증 페이지입니다. 기기 환경 체크 및 인증 폼을 노출합니다.
- * 주의 사항: 
  */
 
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { AuthForm } from "@/components/auth-form";
 import { DeviceWarning } from "@/components/device-warning";
 import { Toaster } from "@/components/ui/sonner";
+import { Home } from "lucide-react";
 
 export default function AuthPage() {
     const router = useRouter();
@@ -43,12 +44,33 @@ export default function AuthPage() {
     if (!isClient) return null;
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-black">
+        <div className="flex min-h-screen flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-black relative">
+            {/* 상단 홈 버튼 (모바일 경고창이 아닐 때만 노출) */}
+            {!showWarning && (
+                <div className="absolute top-8 left-8">
+                    <Link
+                        href="/"
+                        className="flex items-center gap-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors font-medium text-sm"
+                    >
+                        <Home className="w-4 h-4" />
+                        <span>홈으로</span>
+                    </Link>
+                </div>
+            )}
+
             <div className="w-full max-w-md">
                 {showWarning ? (
                     <DeviceWarning onIgnore={handleIgnoreWarning} />
                 ) : (
-                    <AuthForm onSuccess={handleSuccess} />
+                    <div className="space-y-6">
+                        <div className="flex flex-col items-center justify-center space-y-4 mb-4">
+                            <div className="w-12 h-12 bg-black dark:bg-zinc-50 rounded-2xl flex items-center justify-center shadow-lg">
+                                <span className="text-white dark:text-black font-bold">CTX</span>
+                            </div>
+                            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">독자 인증</h2>
+                        </div>
+                        <AuthForm onSuccess={handleSuccess} />
+                    </div>
                 )}
             </div>
             <Toaster position="top-center" />
