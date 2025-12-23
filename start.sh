@@ -28,5 +28,6 @@ echo "   → 포트: $PORT"
 echo "   → URL: http://localhost:$PORT"
 echo ""
 
-# Next.js 개발 서버 실행 (루트 디렉토리에서 직접 실행)
-npm run dev -- -p $PORT
+# Next.js 개발 서버 실행 (webfront 디렉토리에서 실행)
+cd "$PROJECT_DIR/project_source/webfront" && npm run dev -- -p $PORT
+
