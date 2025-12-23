@@ -1,14 +1,15 @@
 /**
  * 파일명: app/dashboard/page.tsx
  * 작성일자: 2025-12-22
+ * 수정일자: 2025-12-23
  * 용도: 인증 후 접근 가능한 모의고사 대시보드 페이지입니다.
- * 주의 사항: 
+ * 변경사항: GAS 연동 및 구글 폼 인증코드 자동 입력 기능 추가
  */
 
 "use client";
 
-import React from "react";
-import { EXAMS } from "@/lib/exam-data";
+import React, { useEffect, useState } from "react";
+import { getExams, Exam } from "@/lib/exam-data";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Copy, FileText, CheckCircle } from "lucide-react";
@@ -16,10 +17,61 @@ import { toast } from "sonner";
 import Link from "next/link";
 
 export default function DashboardPage() {
+    const [exams, setExams] = useState<Exam[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [authCode, setAuthCode] = useState<string>("");
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                // 1. 모의고사 목록 데이터 로드
+                const data = await getExams();
+                setExams(data);
+
+                // 2. 인증 코드 쿠키 읽기 (구글 폼 자동 입력을 위함)
+                const cookies = document.cookie.split('; ');
+                const authCodeCookie = cookies.find(row => row.startsWith('auth_code='));
+                if (authCodeCookie) {
+                    setAuthCode(decodeURIComponent(authCodeCookie.split('=')[1]));
+                }
+            } catch (error) {
+                console.error("Failed to load dashboard data:", error);
+                toast.error("데이터 로드 중 오류가 발생했습니다.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        loadData();
+    }, []);
+
     const handleCopyDataUrl = (url: string) => {
         navigator.clipboard.writeText(url);
         toast.success("데이터 URL이 복사되었습니다.");
     };
+
+    /**
+     * 인증 코드가 포함된 구글 폼 URL 생성
+     */
+    const getPrefilledFormUrl = (exam: Exam) => {
+        if (!exam.formUrl) return "#";
+        if (!authCode) return exam.formUrl;
+
+        // entryId (GSheet에서 관리하는 prefill ID)
+        const entryId = exam.formPrefillId || "123456789";
+        const separator = exam.formUrl.includes("?") ? "&" : "?";
+
+        // 폼 링크가 /viewform 또는 /closed 등으로 되어 있을 수 있으므로 처리 필요할 수 있음
+        return `${exam.formUrl}${separator}entry.${entryId}=${encodeURIComponent(authCode)}`;
+    };
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh] flex-col gap-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-zinc-900 dark:border-zinc-100"></div>
+                <p className="text-zinc-500 font-medium animate-pulse">데이터를 불러오는 중입니다...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="p-6 sm:p-12">
@@ -34,7 +86,7 @@ export default function DashboardPage() {
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-12">
-                    {EXAMS.map((exam) => (
+                    {exams.map((exam) => (
                         <Card key={exam.id} className="group relative flex flex-col overflow-hidden border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
                             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                             <CardHeader className="bg-zinc-100/30 dark:bg-zinc-900/30 border-b border-zinc-200/50 dark:border-zinc-800/50 pb-6">
@@ -75,7 +127,7 @@ export default function DashboardPage() {
                                             </a>
                                         </Button>
                                         <Button asChild size="lg" variant="outline" className="w-full rounded-xl border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-300 active:scale-95">
-                                            <a href={exam.formUrl} target="_blank" rel="noopener noreferrer">
+                                            <a href={getPrefilledFormUrl(exam)} target="_blank" rel="noopener noreferrer">
                                                 <CheckCircle className="mr-2 h-4 w-4" /> 답안 제출
                                             </a>
                                         </Button>
@@ -84,7 +136,7 @@ export default function DashboardPage() {
                             </CardContent>
                             <CardFooter className="bg-zinc-50/50 dark:bg-black/20 py-5 border-t border-zinc-100 dark:border-zinc-800/50">
                                 <Button asChild variant="ghost" className="w-full text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 font-medium">
-                                    <Link href={exam.solutionUrl}>
+                                    <Link href={exam.solutionUrl || `/dashboard/solution/${exam.id}`}>
                                         <FileText className="mr-2 h-4 w-4" /> 모범답안 및 해설 보기
                                     </Link>
                                 </Button>

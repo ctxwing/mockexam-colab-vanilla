@@ -1,0 +1,182 @@
+# 제10회 빅데이터 분석기사 실기 모의고사 정답 및 해설
+
+본 해설은 빅데이터분석기사 – 기출문제 10회 (2025.06.21) 문제를 바탕으로 작성되었습니다.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 데이터셋 경로
+https://raw.githubusercontent.com/YoungjinBD/data/main/exam/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📋 [작업형 제 1유형] 데이터 전처리
+
+### Q1. 소주제별 정답률 분석
+
+문제: 소주제별(sub_topic) 정답률(정답여부가 1인 응답 수 / 해당 소주제 전체 응답 수)을 구하고, 3번째로 높은 정답률을 구하시오. (동일 정답률은 하나의 순위로 간주, 소수점 둘째자리 반올림)
+
+데이터셋: https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_1_1.csv
+
+[코드]
+import pandas as pd
+df = pd.read_csv('https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_1_1.csv')
+rates = df.groupby('sub_topic')['answer'].mean().round(2)
+result = rates.unique()
+result.sort()
+print(result[-3])
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### Q2. 연도-월별 매출 및 카테고리 분석
+
+문제: date를 연도/월로 분리하여 매출액 합계를 구하고 두 번째로 큰 매출액을 출력하시오. 또한 네 번째로 큰 매출액의 연도-월에서 가장 높은 카테고리별 매출 합계를 구하시오.
+
+데이터셋: https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_1_2.csv
+
+[코드]
+import pandas as pd
+df = pd.read_csv('https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_1_2.csv')
+df['date'] = pd.to_datetime(df['date'])
+df['year_month'] = df['date'].dt.to_period('M')
+
+# 1. 두 번째로 큰 매출액
+monthly_sales = df.groupby('year_month')['price'].sum().sort_values(ascending=False)
+print(int(monthly_sales.iloc[1]))
+
+# 2. 네 번째로 큰 연도-월의 카테고리별 최고 매출
+target_month = monthly_sales.index[3]
+category_best = df[df['year_month'] == target_month].groupby('category')['price'].sum().max()
+print(int(category_best))
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### Q3. 스팸/햄 평균 단어 수 차이
+
+문제: message의 단어 수를 공백 기준으로 세고, spam과 ham의 평균 단어 수 차이의 절댓값을 소수점 셋째자리까지 구하시오.
+
+데이터셋: https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_1_3.csv
+
+[코드]
+import pandas as pd
+df = pd.read_csv('https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_1_3.csv')
+df['word_count'] = df['message'].str.split().str.len()
+spam_mean = df[df['label'] == 'spam']['word_count'].mean()
+ham_mean = df[df['label'] == 'ham']['word_count'].mean()
+print(round(abs(spam_mean - ham_mean), 3))
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🤖 [작업형 제 2유형] 모델 구축
+
+### Q4. 가스 소비량(gas_totl) 예측 (Regression)
+
+문제: 건물의 상권 유형, 면적, 연식 등을 바탕으로 연간 총 가스 소비량을 예측하는 모델을 만드시오. 예측 결과를 result.csv로 저장하여 제출하시오.
+
+평가지표: RMSE
+
+훈련 데이터: https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_2_train.csv
+테스트 데이터: https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_2_test.csv
+
+[코드]
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+
+train = pd.read_csv('https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_2_train.csv')
+test = pd.read_csv('https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_2_test.csv')
+
+# 전처리 (결측치는 이미 0으로 처리됨)
+X = pd.get_dummies(train.drop(columns=['gas_totl']))
+y = train['gas_totl']
+X_test = pd.get_dummies(test)
+X_test = X_test.reindex(columns=X.columns, fill_value=0)
+
+# 모델링
+model = RandomForestRegressor(random_state=42)
+model.fit(X, y)
+
+# 예측
+pred = model.predict(X_test)
+
+# 결과 저장
+pd.DataFrame({'pred': pred}).to_csv('result.csv', index=False)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📊 [작업형 제 3유형] 통계적 가설 검정
+
+### Q5. 로지스틱 회귀: 회귀계수 및 오즈비
+
+문제: 이직 여부 예측 모델에서 유의한 변수의 회귀계수, 나이 증가에 따른 오즈비, 특정 조건의 이직 확률을 구하시오.
+
+데이터셋: https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_3_1.csv
+
+[코드]
+import statsmodels.api as sm
+import numpy as np
+import pandas as pd
+
+df = pd.read_csv('https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_3_1.csv')
+X = sm.add_constant(df[['age', 'income', 'overtime']])
+model = sm.Logit(df['attrition'], X).fit()
+
+# 1. 유의한 변수 회귀계수 (p < 0.05)
+print(model.params[model.pvalues < 0.05])
+
+# 2. age 오즈비
+print(round(np.exp(model.params['age']), 3))
+
+# 3. 특정 조건 확률 (age=20, income=3000, overtime=2)
+new_data = [1, 20, 3000, 2]
+print(round(model.predict(new_data)[0], 1))
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### Q6. 다중선형회귀: 주택 가격 예측
+
+문제: 주택 가격 예측 모델 적합 후 유의한 변수의 회귀계수 합, 결정계수, 특정 조건의 예측 가격을 구하시오.
+
+데이터셋: https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_3_2.csv
+
+[코드]
+import statsmodels.api as sm
+import pandas as pd
+
+df = pd.read_csv('https://raw.githubusercontent.com/YoungjinBD/data/main/exam/10_3_2.csv')
+X = sm.add_constant(df[['area', 'height', 'wall']])
+model = sm.OLS(df['price'], X).fit()
+
+# 1. 유의한 변수 회귀계수 합
+sig_vars = model.pvalues[1:][model.pvalues[1:] < 0.05].index
+print(round(model.params[sig_vars].sum(), 4))
+
+# 2. 유의한 변수만으로 재학습 후 결정계수
+X_sig = sm.add_constant(df[sig_vars])
+model_sig = sm.OLS(df['price'], X_sig).fit()
+print(round(model_sig.rsquared, 3))
+
+# 3. 예측 가격 (area=100, height=10, wall=1 중 유의한 것만)
+new_data = {'const': 1, 'area': 100, 'height': 10, 'wall': 1}
+input_data = [new_data[v] for v in ['const'] + list(sig_vars)]
+print(round(model_sig.predict(input_data)[0], 4))
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 💡 답안 제출 안내
+
+아래 항목을 Google Forms에 제출하세요.
+
+• [Q1] 3번째로 높은 정답률 (소수점 둘째자리)
+• [Q2-1] 두 번째로 큰 월별 매출액
+• [Q2-2] 네 번째 월의 최고 카테고리 매출
+• [Q3] 스팸/햄 평균 단어 수 차이 (소수점 셋째자리)
+• [Q4] 최종 결과 파일(result.csv)을 업로드하세요.
+• [Q5-1] 유의한 변수의 회귀계수
+• [Q5-2] age 오즈비
+• [Q5-3] 특정 조건의 이직 확률
+• [Q6-1] 유의한 변수 회귀계수 합
+• [Q6-2] 결정계수
+• [Q6-3] 예측 가격
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+문서 끝
