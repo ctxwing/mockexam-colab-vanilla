@@ -60,8 +60,9 @@ export const EXAMS: Exam[] = [
 
 /**
  * Google Apps Script API를 통해 최신 모의고사 목록을 가져옵니다.
+ * @param force - true일 경우 캐시를 무시하고 강제로 최신 데이터를 가져옵니다.
  */
-export async function getExams(): Promise<Exam[]> {
+export async function getExams(force = false): Promise<Exam[]> {
     const gasUrl = process.env.NEXT_PUBLIC_GAS_API_URL;
 
     if (!gasUrl) {
@@ -70,9 +71,12 @@ export async function getExams(): Promise<Exam[]> {
     }
 
     try {
-        const response = await fetch(`${gasUrl}?action=getExams`, {
-            next: { revalidate: 3600 } // 1시간마다 캐시 갱신
-        });
+        // 강제 새로고침 시 캐시를 사용하지 않음
+        const fetchOptions: RequestInit = force
+            ? { cache: 'no-store' }
+            : { next: { revalidate: 60 } }; // 평소엔 1분 단위 캐싱
+
+        const response = await fetch(`${gasUrl}?action=getExams&t=${force ? Date.now() : 'static'}`, fetchOptions);
 
         if (!response.ok) throw new Error("API 호출 실패");
 

@@ -63,6 +63,8 @@ export function AuthForm({ onSuccess }: AuthFormProps) {
             const data = await response.json();
 
             if (data.success) {
+                // 백업용으로 로컬 스토리지에도 저장
+                localStorage.setItem("ctx_auth_code", code);
                 toast.success("인증에 성공하였습니다!");
                 onSuccess();
             } else {

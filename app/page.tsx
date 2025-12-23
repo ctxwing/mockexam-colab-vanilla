@@ -48,14 +48,6 @@ export default function Home() {
               시작하기
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </Link>
-            <a
-              href="https://www.wishket.com/project/151596/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-14 items-center justify-center px-10 text-lg font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-300 transition-colors"
-            >
-              프로젝트 정보
-            </a>
           </div>
 
           {/* 피처 섹션 */}

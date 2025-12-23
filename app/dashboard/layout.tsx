@@ -12,20 +12,7 @@ import { Toaster } from "@/components/ui/sonner";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-black">
-            {/* 상단 네비게이션 바 */}
-            <nav className="sticky top-0 z-50 w-full border-b border-zinc-200/50 dark:border-zinc-800/50 bg-white/70 dark:bg-black/70 backdrop-blur-md">
-                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center">
-                            <span className="text-white dark:text-black font-bold text-xs">CTX</span>
-                        </div>
-                        <span className="font-bold text-lg tracking-tight text-zinc-900 dark:text-zinc-50 hidden sm:inline-block">
-                            AICE & 빅데이터 분석기사
-                        </span>
-                    </div>
-                </div>
-            </nav>
-
+            {/* 상단 네비게이션 바는 app/layout.tsx의 Navbar 컴포넌트에서 제공됨 */}
             <main>{children}</main>
             <Toaster position="bottom-right" />
         </div>

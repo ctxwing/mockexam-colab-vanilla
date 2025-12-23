@@ -44,20 +44,7 @@ export default function AuthPage() {
     if (!isClient) return null;
 
     return (
-        <div className="flex min-h-screen flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-black relative">
-            {/* 상단 홈 버튼 (모바일 경고창이 아닐 때만 노출) */}
-            {!showWarning && (
-                <div className="absolute top-8 left-8">
-                    <Link
-                        href="/"
-                        className="flex items-center gap-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors font-medium text-sm"
-                    >
-                        <Home className="w-4 h-4" />
-                        <span>홈으로</span>
-                    </Link>
-                </div>
-            )}
-
+        <div className="flex min-h-screen flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-black relative pt-20">
             <div className="w-full max-w-md">
                 {showWarning ? (
                     <DeviceWarning onIgnore={handleIgnoreWarning} />

@@ -24,17 +24,24 @@ export const metadata: Metadata = {
   description: "QR 코드를 통한 모의고사 접속 브릿지 웹사이트",
 };
 
+import { Toaster } from "sonner";
+import { Navbar } from "@/components/navbar";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Navbar />
+        <div className="pt-16 min-h-screen">
+          {children}
+        </div>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );
