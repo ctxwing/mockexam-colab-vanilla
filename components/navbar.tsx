@@ -7,12 +7,23 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { User, LogIn, Home } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { User, LogIn, Home, LogOut } from "lucide-react";
 
 export function Navbar() {
     const [authCode, setAuthCode] = useState<string>("");
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        // 쿠키 삭제
+        document.cookie = "auth_code=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        // 로컬스토리지 삭제
+        localStorage.removeItem("ctx_auth_code");
+        setAuthCode("");
+        router.push("/");
+        router.refresh();
+    };
 
     useEffect(() => {
         // 쿠키 또는 로컬스토리지에서 인증 코드 가져오기
@@ -53,14 +64,23 @@ export function Navbar() {
                     )}
 
                     {authCode ? (
-                        <Link
-                            href="/dashboard"
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 text-xs font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
-                        >
-                            <User className="w-3.5 h-3.5" />
-                            <span className="hidden sm:block">{authCode}</span>
-                            <span className="sm:hidden">인증됨</span>
-                        </Link>
+                        <div className="flex items-center gap-2">
+                            <Link
+                                href="/dashboard"
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-400 text-xs font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
+                            >
+                                <User className="w-3.5 h-3.5" />
+                                <span className="hidden sm:block">{authCode}</span>
+                                <span className="sm:hidden">인증됨</span>
+                            </Link>
+                            <button
+                                onClick={handleLogout}
+                                title="로그아웃"
+                                className="p-2 rounded-full text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all active:scale-95"
+                            >
+                                <LogOut className="w-4 h-4" />
+                            </button>
+                        </div>
                     ) : (
                         !isDashboard && (
                             <Link

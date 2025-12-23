@@ -70,6 +70,7 @@ function onOpen() {
     .addItem('🚀 1. 시스템 초기 빌드 (Build) [❗최초 1회만!]', 'runFullSetup')
     .addSeparator()
     .addItem('🔄 2. 드롭다운 목록 파일 동기화 (Sync)', 'updateDropdowns')
+    .addItem('⚡ 3. 수정한 내용 서버 즉시 반영 (Purge) [⚠️ 주의!]', 'forceSyncToServer')
     .addToUi(); 
 }
 
@@ -140,6 +141,55 @@ function initSheet(ss, name, headers) {
     .setVerticalAlignment('middle')
     .setHorizontalAlignment('center');
   sheet.setFrozenRows(1);
+}
+
+/**
+ * [강력 추천] Next.js 서버의 ISR 캐시를 즉시 파기합니다.
+ * 시트에서 내용을 수정하거나 '파일 동기화'를 마친 뒤 이 함수를 실행하면
+ * Vercel 배포 서버에 즉시 반영됩니다.
+ */
+function forceSyncToServer() {
+  const ui = SpreadsheetApp.getUi();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const settingsSheet = ss.getSheetByName(CONFIG.SETTINGS_SHEET_NAME);
+  
+  // 1. 설정 시트에서 서버 주소 및 시크릿 확인
+  let serverUrl = "https://your-site.com"; // 기본값
+  let secret = "ctx-admin-secret";         // 기본값
+  
+  if (settingsSheet) {
+    const settings = settingsSheet.getDataRange().getValues();
+    const envUrl = getSetting(settings, 'vercelUrl');
+    const envSecret = getSetting(settings, 'revalidateSecret');
+    if (envUrl) serverUrl = envUrl;
+    if (envSecret) secret = envSecret;
+  }
+
+  // 2. 최종 확인 알림
+  const response = ui.alert('⚡ 서버 즉시 반영 안내', 
+    '이 작업은 Vercel 서버에 저장된 옛날 캐시를 강제로 삭제하고 최신 시트 내용을 불러오게 만듭니다. \n\n' +
+    '수정하신 내용이 모든 사용자에게 즉시(1~2초 내) 노출됩니다. \n' +
+    '지금 서버를 갱신할까요?', 
+    ui.ButtonSet.YES_NO);
+  
+  if (response !== ui.Button.YES) return;
+
+  // 3. API 호출
+  const apiPath = "/api/revalidate?path=/dashboard&secret=" + secret;
+  const fullUrl = serverUrl.replace(/\/$/, "") + apiPath;
+
+  try {
+    const fetchResponse = UrlFetchApp.fetch(fullUrl);
+    const result = JSON.parse(fetchResponse.getContentText());
+    
+    if (result.revalidated) {
+      ui.alert('✅ 동기화 성공', 'Vercel 서버 캐시가 성공적으로 갱신되었습니다. \n이제 사용자들이 최신 데이터를 즉시 볼 수 있습니다.', ui.ButtonSet.OK);
+    } else {
+      ui.alert('⚠️ 확인 필요', '응답은 왔으나 갱신 여부가 불분명합니다: ' + fetchResponse.getContentText(), ui.ButtonSet.OK);
+    }
+  } catch(e) {
+    ui.alert('❌ 동기화 실패', '서버 연결 중 오류가 발생했습니다. URL 및 Secret 설정을 확인하세요. \n오류 내용: ' + e.toString(), ui.ButtonSet.OK);
+  }
 }
 
 function getOrCreateFolder(parent, name) {

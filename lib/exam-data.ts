@@ -71,12 +71,21 @@ export async function getExams(force = false): Promise<Exam[]> {
     }
 
     try {
-        // 강제 새로고침 시 캐시를 사용하지 않음
+        // 서버 사이드와 클라이언트 사이드 fetch 옵션 분기
+        const isServer = typeof window === 'undefined';
+
         const fetchOptions: RequestInit = force
             ? { cache: 'no-store' }
-            : { next: { revalidate: 60 } }; // 평소엔 1분 단위 캐싱
+            : isServer
+                ? { next: { revalidate: 3600 } } // 서버에서는 1시간마다 갱신 (ISR)
+                : { cache: 'default' };          // 클라이언트에서는 브라우저 캐시 활용
 
-        const response = await fetch(`${gasUrl}?action=getExams&t=${force ? Date.now() : 'static'}`, fetchOptions);
+        // URL에 타임스탬프를 추가하여 GAS의 강력한 캐싱을 우회하거나 이용함
+        const url = new URL(gasUrl);
+        url.searchParams.set('action', 'getExams');
+        if (force) url.searchParams.set('t', Date.now().toString());
+
+        const response = await fetch(url.toString(), fetchOptions);
 
         if (!response.ok) throw new Error("API 호출 실패");
 

@@ -7,7 +7,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { AuthForm } from "@/components/auth-form";
 import { DeviceWarning } from "@/components/device-warning";
@@ -15,7 +15,17 @@ import { Toaster } from "@/components/ui/sonner";
 import { Home } from "lucide-react";
 
 export default function AuthPage() {
+    return (
+        <React.Suspense fallback={<div className="min-h-screen flex items-center justify-center">로딩 중...</div>}>
+            <AuthPageContent />
+        </React.Suspense>
+    );
+}
+
+function AuthPageContent() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectPath = searchParams.get("redirect") || "/dashboard";
     const [isMobile, setIsMobile] = useState(false);
     const [showWarning, setShowWarning] = useState(false);
     const [isClient, setIsClient] = useState(false);
@@ -34,7 +44,7 @@ export default function AuthPage() {
     }, []);
 
     const handleSuccess = () => {
-        router.push("/dashboard");
+        router.push(redirectPath);
     };
 
     const handleIgnoreWarning = () => {

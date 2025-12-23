@@ -267,7 +267,7 @@ function createPremiumManual(ss) {
   sheet.clear();
   
   const content = [
-    ['💎 CTX 모의고사 통합 관리 시스템 마스터 매뉴얼 (v3.5)'],
+    ['💎 CTX 모의고사 통합 관리 시스템 마스터 매뉴얼 (v3.8)'],
     ['본 시스템은 구글 문서(해설), 구글 폼(응시), 스프레드시트(데이터베이스)를 유기적으로 연결합니다.'],
     [''],
     ['1️⃣ 서비스 운영의 핵심 순서 (최초 1회 필수)'],
@@ -278,17 +278,17 @@ function createPremiumManual(ss) {
     ['2️⃣ 일상적인 문항 및 학생 관리'],
     [' • exams 시트 : 새로운 시험을 추가하거나, order(순서)를 바꾸고 isActive(노출여부)를 조절합니다.'],
     [' • auth_codes 시트 : 학생들에게 나눠줄 16자리 코드가 20개 준비되어 있습니다. 더 필요하면 아래에 그냥 쓰세요.'],
-    [' • 📝 팁 : 시트에서 수정하면 웹사이트 대시보드에 1초 만에 즉시 반영됩니다.'],
+    [' • 📝 반영 안내 : 시트 수정 후 최대 1시간 내 자동 반영되지만, 즉시 반영을 원할 땐 아래 기능을 사용하세요.'],
     [''],
-    ['3️⃣ 고급 유지보수 가이드'],
-    [' • 해설지 수정 : "Solutions" 폴더 안의 구글 문서를 그냥 수정하세요. 링크는 그대로 유지됩니다.'],
-    [' • 파일 추가 : 새로 파일을 올렸다면 상단 메뉴 [💎 [모의고사 통합 관리]] > [🔄 2. 동기화]를 누르세요.'],
-    [' • 주의 사항 : settings 시트는 시스템 나사이므로 절대 건드리지 마세요.'],
+    ['3️⃣ 고급 유지보수 및 즉시 배포'],
+    [' • ⚡ 서버 즉시 반영 : 상단 메뉴 [💎 [모의고사 통합 관리]] > [⚡ 3. 수정한 내용 서버 즉시 반영]을 누르세요.'],
+    [' • 🔄 파일 목록 동기화 : Solutions/Forms 폴더에 파일을 올린 뒤 [🔄 2. 동기화]를 누르면 목록이 갱신됩니다.'],
+    [' • 📄 해설지 수정 : "Solutions" 폴더 안의 구글 문서를 그냥 수정하세요. 웹사이트 내부 뷰어에 즉시 반영됩니다.'],
     [''],
     ['🚨 장애 발생 시 자가 조치'],
-    [' • 웹사이트에 시험이 안 떠요! -> "exams" 시트의 isActive가 TRUE 인지, order가 숫자인지 확인하세요.'],
-    [' • 해설지가 권한 부족이 떠요! -> 구글 드라이브 "Solutions" 폴더가 [전체 공개-뷰어]인지 확인하세요.'],
-    [' • 인증 코드가 틀렸다고 나와요! -> "auth_codes" 시트에 해당 코드가 있는지, isActive가 TRUE 인지 확인하세요.']
+    [' • 웹사이트에 시험이 안 떠요! -> "exams" 시트의 isActive가 TRUE 인지 확인 후 "서버 즉시 반영"을 실행하세요.'],
+    [' • 세팅 값이 초기화됐어요! -> "settings" 시트의 vercelUrl과 revalidateSecret이 올바른지 확인하세요.'],
+    [' • 인증 코드가 적용 안 돼요! -> "auth_codes" 시트에서 해당 코드의 isActive가 체크되어 있는지 확인하세요.']
   ];
   
   sheet.getRange(1, 1, content.length, 1).setValues(content);
@@ -302,7 +302,8 @@ function createPremiumManual(ss) {
     sheet.getRange(row, 1).setFontWeight('bold').setFontSize(14).setBackground('#e8f0fe').setBorder(true, true, true, true, null, null);
   });
   
-  sheet.getRange('A19').setBackground('#feebec').setFontColor('#d93025'); // 경고 섹션
+  sheet.getRange('A19').setBackground('#fdf4e3').setFontColor('#b45309'); // 서버 반영 섹션 (호박색)
+  sheet.getRange('A24').setBackground('#feebec').setFontColor('#d93025'); // 경고 섹션
   sheet.setColumnWidth(1, 1000);
   sheet.setRowHeights(1, content.length, 25);
 }
