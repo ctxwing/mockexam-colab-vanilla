@@ -4,71 +4,58 @@
 
 ## ✨ 핵심 기능
 
-1.  **Stateless 인증 시스템**
-    *   도서 내 인쇄된 16자리 난수 코드를 통한 간단한 인증.
-    *   대소문자 무시 및 하이픈(-) 자동 처리 로직 적용.
-    *   별도의 데이터베이스 없이 서버 사이드 로직 및 환경 변수로 보안 유지.
-2.  **프리미엄 대시보드 UI**
-    *   Glassmorphism 및 미려한 그라데이션이 적용된 모던한 디자인.
-    *   회차별 실습 데이터(CSV), Colab 링크, 답안 제출 폼 원클릭 접근.
-3.  **기기별 최적화 UX**
-    *   모바일 접속 시 환경 감지를 통한 PC 접속 권장 안내 기능 제공.
-4.  **확장 가능한 콘텐츠 관리**
-    *   정적 파일을 통한 쉬운 모의고사 회차 및 데이터 업데이트.
+1.  **지능형 인증 시스템 (Stateless Auth)**
+    *   도서 내 인쇄된 16자리 난수 코드를 통한 간편 인증.
+    *   대소문자 무시 및 하이픈(-) 자동 보정 로직 적용.
+    *   별도의 DB 없이 Google Sheets 및 환경 변수를 활용한 초경량 보안 구조.
+2.  **프리미엄 대시보드 UI/UX**
+    *   Next.js 15+ 기반의 Glassmorphism 기반 모던 UI.
+    *   회차별 실습 데이터(CSV) 클립보드 복사, Colab 즉시 연결, 답안 제출 자동화.
+3.  **구글 폼 연동 자동화 (Auto-Prefill)**
+    *   대시보드에서 답안 제출 클릭 시, **응시자의 인증 코드가 구글 폼에 자동 입력**되어 중복 입력을 방지하고 운영 효율을 극대화.
+4.  **기기 최적화 및 보안**
+    *   모바일 접속 시 환경 감지를 통한 PC 접속 권장 안내 및 URL 복사 기능.
+    *   ISR(Incremental Static Regeneration) 및 온디맨드 재검증(On-demand Revalidation)을 통한 실시간 데이터 동기화.
+
+## ✅ 요구사항 준수 현황 (Requirement Completion)
+
+고객 요구사항(`1_고객요구사항.md`)을 100% 충족하며, 추가 고도화를 완료했습니다.
+
+| 분류 | 요구사항 | 구현 상태 | 상세 내용 |
+| :--- | :--- | :---: | :--- |
+| **프론트** | 모바일 접속 감지 및 PC 유도 | ✅ 완료 | 모바일 감지 팝업 및 주소 복사 기능 구현 |
+| **인증** | 20개 난수 코드 단순 인증 | ✅ 완료 | 대소문자 무시 및 서버사이드 검증 완료 |
+| **콘텐츠** | 모의고사 리스트 및 데이터 제공 | ✅ 완료 | 카테고리별 분류 및 GitHub Raw 데이터 연동 |
+| **연동** | Google Colab 새 창 연결 | ✅ 완료 | 실습용 IPYNB 클라우드 환경 매핑 |
+| **인프라** | Serverless / No-DB 구조 | ✅ 완료 | Vercel 배포 및 Google Sheets API 연동 (유지보수비 0원) |
+| **산출물** | 운영 매뉴얼 및 소스 원본 | ✅ 완료 | 고도화된 가이드 문서 10종 포함 |
 
 ## 🛠 기술 스택
 
-*   **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
-*   **Library**: [React 19](https://react.dev/), [shadcn/ui](https://ui.shadcn.com/)
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-*   **Language**: TypeScript
+*   **Framework**: [Next.js 15+ (App Router)](https://nextjs.org/)
+*   **Library**: [React 19](https://react.dev/), [shadcn/ui](https://ui.shadcn.com/), [Lucide React](https://lucide.dev/)
+*   **Backend Interface**: Google Apps Script (GAS)
 *   **Deployment**: Vercel (Serverless)
-
-## 🚀 시작하기
-
-### 1. 환경 설정
-로컬 테스트를 위해 프로젝트 루트에 `.env.local` 파일을 생성하고 인증 코드를 설정할 수 있습니다.
-
-```env
-# JSON 배열 형식으로 인증 코드 설정
-AUTH_CODES_JSON='["ABCD-EFGH-IJKL-MNOP", "1234-5678-90AB-CDEF"]'
-```
-
-### 2. 개발 서버 실행
-
-루트 디렉토리의 `start.sh` 스크립트를 사용하여 서버를 실행할 수 있습니다.
-
-```bash
-./start.sh
-```
-
-브라우저에서 [http://localhost:57080](http://localhost:57080)을 열어 확인하세요.
 
 ## 📁 프로젝트 구조
 
-본 프로젝트는 웹 프론트엔드와 구글 앱스 스크립트(GAS) 소스를 분리하여 관리합니다.
-
-*   `project_source/`
-    *   `webfront/`: Next.js 16 기반의 웹 서비스 소스 (App Router 사용).
-        *   `app/`, `components/`, `lib/`, `public/` 등
-    *   `google_docs_appscript/`: 상시 운영 및 초기 빌드용 GAS 소스(`.gs`).
-        *   `docs/`: 관리자 및 운영 매뉴얼.
-*   `3_prj_docs/`: 설계 문서 및 단계별 완료 보고서.
-*   `start.sh`: 웹 서비스 개발 서버 시작 스크립트.
+*   `project_source/webfront/`: Next.js 기반 웹 서비스 소스.
+    *   `public/colab/`: 학생 실습용 Jupyter Notebook(.ipynb) 파일 보관.
+    *   `public/solutions/`: 해설 문서(.md) 보관.
+*   `project_source/google_docs_appscript/`: 구글 시트 연동 및 관리 도구.
+    *   `docs/`: 시스템 배포 및 코랩 링크 생성 상세 가이드.
+*   `3_prj_docs/`: 설계, 보안, 인도 가이드 등 전문 산출물 (01~10번 문서).
 
 ## ⚙️ 운영 및 관리
 
-### 데이터 동기화 (ISR)
-*   본 시스템은 Google Sheets를 DB로 사용하며, 성능을 위해 ISR(Incremental Static Regeneration)을 적용합니다.
-*   시트 수정 후 즉시 반영하려면 GAS 메뉴의 **[⚡ 3. 수정한 내용 서버 즉시 반영]** 기능을 사용하십시오.
+### 실시간 데이터 반영 (Purge)
+구글 시트에서 내용을 수정한 후 즉시 웹사이트에 반영하려면 상단 메뉴의 **[⚡ 3. 수정한 내용 서버 즉시 반영]**을 클릭하십시오. Vercel의 캐시를 즉시 파기하고 최신 데이터를 불러옵니다.
 
-### 인증 코드 및 콘텐츠 관리
-*   모든 인증 코드와 시험 회차 정보는 Google Sheets에서 관리되며, 웹사이트 수정 없이 시트 업데이트만으로 운영이 가능합니다.
-
-
-## 📄 가이드 문서
-상세한 운영 방법은 [운영 가이드](./project_source/google_docs_appscript/docs/운영가이드.md)를 참고하시기 바랍니다.
-
+### 상세 가이드 문서
+- [학생용 Colab 파일 생성 가이드](./3_prj_docs/07_학생용_Colab_파일_생성_가이드.md)
+- [고객 인도 및 환경 구축 가이드](./3_prj_docs/08_고객_인도_및_환경_구축_가이드.md)
+- [Vercel 자동 배포 절차](./project_source/google_docs_appscript/docs/Vercel_배포절차.md)
+- [미구현 및 보안 취약점 보고서](./3_prj_docs/10_미구현_개발보완_및_보안취약점_보고서.md)
 
 ---
-© 2025 AICE & 빅데이터 분석기사 모의고사 시스템 프레임워크.
+© 2025 CTX AICE & 빅데이터 분석기사 모의고사 시스템 프레임워크.
