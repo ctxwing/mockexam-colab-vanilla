@@ -63,36 +63,47 @@ export const EXAMS: Exam[] = [
  * @param force - true일 경우 캐시를 무시하고 강제로 최신 데이터를 가져옵니다.
  */
 export async function getExams(force = false): Promise<Exam[]> {
-    const gasUrl = process.env.NEXT_PUBLIC_GAS_API_URL;
+    const isServer = typeof window === 'undefined';
+
+    // 서버 사이드에서는 환경변수에서 직접 가져오거나 (보안 강화)
+    // 클라이언트 사이드에서는 보안을 위해 내부 프록시 API(/api/exams)를 호출합니다.
+    if (!isServer) {
+        try {
+            const proxyUrl = `/api/exams?force=${force}`;
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error("Proxy API 호출 실패");
+            return await response.json();
+        } catch (error) {
+            console.error("클라이언트 데이터 로드 중 오류 (프록시):", error);
+            return EXAMS;
+        }
+    }
+
+    // 서버 사이드 실행 (ISR 등)
+    const gasUrl = process.env.GAS_API_URL || process.env.NEXT_PUBLIC_GAS_API_URL;
 
     if (!gasUrl) {
-        console.warn("NEXT_PUBLIC_GAS_API_URL이 설정되지 않았습니다. 정적 데이터를 사용합니다.");
+        console.warn("GAS_API_URL이 설정되지 않았습니다. 정적 데이터를 사용합니다.");
         return EXAMS;
     }
 
     try {
-        // 서버 사이드와 클라이언트 사이드 fetch 옵션 분기
-        const isServer = typeof window === 'undefined';
-
         const fetchOptions: RequestInit = force
             ? { cache: 'no-store' }
-            : isServer
-                ? { next: { revalidate: 3600 } } // 서버에서는 1시간마다 갱신 (ISR)
-                : { cache: 'default' };          // 클라이언트에서는 브라우저 캐시 활용
+            : { next: { revalidate: 3600 } };
 
-        // URL에 타임스탬프를 추가하여 GAS의 강력한 캐싱을 우회하거나 이용함
         const url = new URL(gasUrl);
         url.searchParams.set('action', 'getExams');
         if (force) url.searchParams.set('t', Date.now().toString());
 
         const response = await fetch(url.toString(), fetchOptions);
 
-        if (!response.ok) throw new Error("API 호출 실패");
+        if (!response.ok) throw new Error("GAS API 호출 실패");
 
         const data = await response.json();
         return Array.isArray(data) ? data : EXAMS;
     } catch (error) {
-        console.error("데이터 로드 중 오류:", error);
+        console.error("서버 데이터 로드 중 오류:", error);
         return EXAMS;
     }
 }

@@ -36,7 +36,8 @@ export function validateAuthCode(input: string): boolean {
  * Google Apps Script API를 사용하여 인증 코드를 검증합니다. (비동기)
  */
 export async function validateAuthCodeAsync(input: string): Promise<boolean> {
-    const gasUrl = process.env.NEXT_PUBLIC_GAS_API_URL;
+    // 보안: 서버 전용 환경 변수를 우선 사용합니다.
+    const gasUrl = process.env.GAS_API_URL || process.env.NEXT_PUBLIC_GAS_API_URL;
 
     // GAS URL이 설정되지 않은 경우 로컬 로직으로 폴백
     if (!gasUrl) {

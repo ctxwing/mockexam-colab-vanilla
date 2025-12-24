@@ -44,7 +44,12 @@ function AuthPageContent() {
     }, []);
 
     const handleSuccess = () => {
-        router.push(redirectPath);
+        // 보안: Open Redirect 방지 - 외부 도메인으로의 리디렉션 차단
+        // '/'로 시작하는 내부 경로만 허용합니다.
+        const isSafePath = redirectPath.startsWith("/") && !redirectPath.startsWith("//");
+        const safeRedirect = isSafePath ? redirectPath : "/dashboard";
+
+        router.push(safeRedirect);
     };
 
     const handleIgnoreWarning = () => {
