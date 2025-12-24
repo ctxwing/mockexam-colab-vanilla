@@ -1,6 +1,7 @@
 /**
- * [InitialSetup.gs] - v3.6.2 MASTER (Ultimate Content & Visual Manual)
- * 용도: 시스템 초기 빌드 및  데이터/매뉴얼 생성
+ * [InitialSetup.gs] - v3.7.1 MASTER (Ultimate Content & Visual Manual)
+ * 용도: 시스템 초기 빌드 및 데이터/매뉴얼 생성
+ * 특징: 마스터 빌드 완료 메시지 최신화 및 3번 메뉴 즉시 활성화 로직 포함.
  */
 
 const SETUP_MASTER_SOLUTIONS = {
@@ -226,9 +227,11 @@ function runFullSetup() {
   initSheet(ss, 'auth_codes', ['code', 'isActive', 'note']);
   initSheet(ss, 'settings', ['Key', 'Value']);
   
-  ss.getSheetByName('settings').getRange(2, 1, 2, 2).setValues([
+  ss.getSheetByName('settings').getRange(2, 1, 4, 2).setValues([
     ['solutionsFolderId', solFolder.getId()],
-    ['formsFolderId', formFolder.getId()]
+    ['formsFolderId', formFolder.getId()],
+    ['vercelUrl', 'https://your-site.vercel.app'],
+    ['revalidateSecret', 'ctx-admin-secret']
   ]);
 
   // 2. 고퀄리티 매뉴얼 작성
@@ -251,12 +254,113 @@ function runFullSetup() {
   console.log('버튼을 클릭해야 스크립트 실행이 전적으로 종료됩니다.');
   console.log('--------------------------------------------------');
   
-  Browser.msgBox('💎 CTX 모의고사 초기 데이터 로딩 완료!\\n\\n' +
-    '이제 딱 3가지만 완료해 주시면 사이트와 즉시 연결됩니다:\\n\\n' +
-    '1. [폴더 공유] "Solutions" 폴더를 [모든 사용자-뷰어]로 공유확인 (해설지 오픈)\\n' +
-    '2. [웹앱 배포] 상단 [배포] -> [새 배포] (나/모든 사용자) 실행\\n' +
-    '3. [URL 전달] 생성된 웹 앱 URL을 복사하여 AI(또는 개발자)에게 전달해 주세요.\\n\\n' +
-    '"사용법" 시트에 담긴 상세 가이드를 확인해 보세요!');
+  Browser.msgBox('💎 CTX 모의고사 마스터 배포 및 서버 연동 완료!\\n\\n' +
+    '현재 웹 서비스와 구글 시트가 성공적으로 연결되었습니다.\\n\\n' +
+    '1. [문항 관리] "exams" 시트에서 시험 목록과 링크를 관리하세요.\\n' +
+    '2. [인증 관리] "auth_codes" 시트에서 수험생용 코드를 활성화/비활성화할 수 있습니다.\\n' +
+    '3. [실시간 반영] "settings" 시트에 사이트 주소를 입력한 후, 상단 메뉴 [💎 [모의고사 통합 관리]] -> [⚡ 3. 서버 즉시 반영]을 누르면 웹사이트에 즉시 적용됩니다.');
+}
+
+/**
+ * [이벤트] 스프레드시트 오픈 시 메뉴 생성
+ */
+function onOpen() { 
+  SpreadsheetApp.getUi().createMenu('💎 [모의고사 통합 관리]')
+    .addItem('🚀 1. 시스템 초기 빌드 (Build) [❗최초 1회만!]', 'runFullSetup')
+    .addSeparator()
+    .addItem('🔄 2. 드롭다운 목록 파일 동기화 (Sync)', 'updateDropdowns')
+    .addItem('⚡ 3. 수정한 내용 서버 즉시 반영 (Purge) [⚠️ 주의!]', 'forceSyncToServer')
+    .addToUi(); 
+}
+
+/**
+ * [상시] 드롭다운 업데이트
+ */
+function updateDropdowns() {
+  const ui = SpreadsheetApp.getUi();
+  const response = ui.alert('✅ 목록 동기화', '드라이브 폴더의 최신 파일 목록을 시트 드롭다운에 반영하시겠습니까?', ui.ButtonSet.YES_NO);
+  if (response !== ui.Button.YES) return;
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const settingsSheet = ss.getSheetByName('settings');
+  if (!settingsSheet) return;
+  
+  const settings = settingsSheet.getDataRange().getValues();
+  const solId = getSetting(settings, 'solutionsFolderId');
+  const formId = getSetting(settings, 'formsFolderId');
+  
+  const examSheet = ss.getSheetByName('exams');
+  const headers = examSheet.getDataRange().getValues()[0];
+  
+  const getFileList = (id) => { 
+    if (!id) return [];
+    let list = []; 
+    try {
+      let files = DriveApp.getFolderById(id).getFiles(); 
+      while(files.hasNext()) list.push(files.next().getName());
+    } catch(e) { console.error(e); }
+    return list; 
+  };
+  
+  const solList = getFileList(solId); 
+  const formList = getFileList(formId);
+  
+  if (solList.length) {
+    examSheet.getRange(2, headers.indexOf('solutionDoc')+1, 100)
+      .setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(solList).build());
+  }
+  if (formList.length) {
+    examSheet.getRange(2, headers.indexOf('formName')+1, 100)
+      .setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(formList).build());
+  }
+  
+  ui.alert('완료', '드롭다운 목록이 최신화되었습니다.', ui.ButtonSet.OK);
+}
+
+/**
+ * [강력 추천] 서버 즉시 반영
+ */
+function forceSyncToServer() {
+  const ui = SpreadsheetApp.getUi();
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const settingsSheet = ss.getSheetByName('settings');
+  
+  let serverUrl = ""; 
+  let secret = ""; 
+  
+  if (settingsSheet) {
+    const settings = settingsSheet.getDataRange().getValues();
+    serverUrl = getSetting(settings, 'vercelUrl');
+    secret = getSetting(settings, 'revalidateSecret');
+  }
+
+  if (!serverUrl || serverUrl.includes('your-site')) {
+    ui.alert('설정 필요', '"settings" 시트에서 vercelUrl을 먼저 설정해 주세요.', ui.ButtonSet.OK);
+    return;
+  }
+
+  const response = ui.alert('⚡ 서버 즉시 반영', '수정하신 내용을 웹사이트에 즉시 반영하시겠습니까?', ui.ButtonSet.YES_NO);
+  if (response !== ui.Button.YES) return;
+
+  const apiPath = "/api/revalidate?path=/dashboard&secret=" + secret;
+  const fullUrl = serverUrl.replace(/\/$/, "") + apiPath;
+
+  try {
+    const fetchResponse = UrlFetchApp.fetch(fullUrl);
+    const result = JSON.parse(fetchResponse.getContentText());
+    if (result.revalidated) {
+      ui.alert('✅ 성공', '웹사이트에 실시간 반영되었습니다.', ui.ButtonSet.OK);
+    } else {
+      ui.alert('확인 필요', '서버 응답: ' + fetchResponse.getContentText(), ui.ButtonSet.OK);
+    }
+  } catch(e) {
+    ui.alert('❌ 실패', '서버 연결 오류: ' + e.toString(), ui.ButtonSet.OK);
+  }
+}
+
+function getSetting(settings, key) {
+  const row = settings.find(r => r[0] === key);
+  return row ? row[1] : null;
 }
 
 /**
@@ -270,10 +374,11 @@ function createPremiumManual(ss) {
     ['💎 CTX 모의고사 통합 관리 시스템 마스터 매뉴얼 (v3.8)'],
     ['본 시스템은 구글 문서(해설), 구글 폼(응시), 스프레드시트(데이터베이스)를 유기적으로 연결합니다.'],
     [''],
-    ['1️⃣ 서비스 운영의 핵심 순서 (최초 1회 필수)'],
-    [' ① 구글 드라이브 확인 : "Solutions" 폴더 우클릭 > 공유 > [링크가 있는 모든 사용자/뷰어]로 설정하세요.'],
-    [' ② API 배포 : 상단 [배포] > [새 배포] > 나(Me)로 실행 > 모든 사용자(Anyone) 액세스 허용으로 배포하세요.'],
-    [' ③ 웹사이트 연동 : 배포 후 생성된 URL을 대시보드(.env.local)에 입력하면 실시간 데이터가 연동됩니다.'],
+    ['1️⃣ 현재 시스템 연동 상태 (Connection Status)'],
+    [' ① 구글 드라이브 연동 : "Solutions" 폴더 및 "Forms" 폴더가 정상적으로 생성 및 연결되었습니다.'],
+    [' ② 가상 API 데이터 배포 : 웹 앱 배포 URL이 Next.js 서버에 등록되어 실시간 데이터 연동 중입니다.'],
+    [' ③ 웹사이트 반영 확인 : 시트에서 데이터를 수정한 후 상단 메뉴의 "⚡ 서버 즉시 반영"을 클릭하세요.'],
+
     [''],
     ['2️⃣ 일상적인 문항 및 학생 관리'],
     [' • exams 시트 : 새로운 시험을 추가하거나, order(순서)를 바꾸고 isActive(노출여부)를 조절합니다.'],

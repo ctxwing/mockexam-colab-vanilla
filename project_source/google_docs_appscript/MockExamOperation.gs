@@ -1,7 +1,7 @@
 /**
- * [파일 1: GoogleAppsScript.gs] - v3.2.0 MASTER (상시 운용 파일)
+ * [파일 1: MockExamOperation.gs] - v3.4.1 MASTER (상시 운용 파일)
  * 용도: 상시 운용용 (API 핸들러, 드롭다운 업데이트, 기본 유틸리티)
- * 특징: 초기 로딩용 대용량 데이터(시험 정의 등)를 배제하여 가볍고 빠르게 동작함.
+ * 특징: 3번 서버 즉시 반영(Purge) 메뉴 고정 및 설정 누락 시 팝업 안내 강화.
  */
 
 const CONFIG = {
@@ -164,6 +164,16 @@ function forceSyncToServer() {
     if (envUrl) serverUrl = envUrl;
     if (envSecret) secret = envSecret;
   }
+
+  // 설정 확인
+  if (!serverUrl || serverUrl.includes('your-site.com')) {
+    ui.alert('⚠️ 설정이 필요합니다', 
+      '구글 시트의 "settings" 탭에서 [vercelUrl]을 실제 웹사이트 주소로 수정해 주세요.\n' +
+      '예: https://qr-mockexam-colab.vercel.app', 
+      ui.ButtonSet.OK);
+    return;
+  }
+
 
   // 2. 최종 확인 알림
   const response = ui.alert('⚡ 서버 즉시 반영 안내', 
