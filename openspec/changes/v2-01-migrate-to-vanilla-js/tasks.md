@@ -70,8 +70,6 @@
 - [x] 1.2.4 pages/learning.html (학습 화면 페이지)
 - [x] 1.2.5 pages/mobile-intro.html (모바일 안내 페이지)
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_2_완료내역.md` 작성 후 커밋/푸시
-> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_2_완료내역.md` 작성 후 커밋/푸시
-> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_2_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.3 기본 CSS 구조 작성
 - [x] 1.3.1 css/reset.css (CSS 초기화)
@@ -79,15 +77,11 @@
 - [x] 1.3.3 css/common.css (공통 컴포넌트 스타일)
 - [x] 1.3.4 css/responsive.css (반응형 미디어 쿼리)
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_3_완료내역.md` 작성 후 커밋/푸시
-> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_3_완료내역.md` 작성 후 커밋/푸시
-> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_3_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.4 기본 JS 구조 작성
 - [x] 1.4.1 js/common.js (공통 유틸리티 함수)
 - [x] 1.4.2 js/device-detect.js (모바일/PC 감지 로직)
 - [x] 1.4.3 js/storage.js (Local Storage 래퍼 함수)
-> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_4_완료내역.md` 작성 후 커밋/푸시
-> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_4_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_4_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.5 개발 환경 설정
@@ -103,6 +97,8 @@
 - [x] 1.6.4 js/device-detect.js 디바이스 감지 로직 테스트
 - [x] 1.6.5 js/storage.js Local Storage 래퍼 함수 테스트
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_6_완료내역.md` 작성 후 커밋/푸시
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_완료내역.md` 작성 후 커밋/푸시
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_6_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_6_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_6_완료내역.md` 작성 후 커밋/푸시
