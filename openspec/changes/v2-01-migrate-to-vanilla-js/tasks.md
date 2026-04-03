@@ -91,9 +91,9 @@
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_4_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.5 개발 환경 설정
-- [ ] 1.5.1 로컬 개발 서버 설정 (Python http.server 또는 Live Server)
-- [ ] 1.5.2 .gitignore 파일 생성
-- [ ] 1.5.3 README.md 작성 (프로젝트 개요, 실행 방법)
+- [x] 1.5.1 로컬 개발 서버 설정 (Python http.server 또는 Live Server)
+- [x] 1.5.2 .gitignore 파일 생성
+- [x] 1.5.3 README.md 작성 (프로젝트 개요, 실행 방법)
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_5_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.6 Phase 1 단위 테스트
