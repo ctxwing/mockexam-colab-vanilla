@@ -2,67 +2,35 @@
     "exams": [
         {
             "id": 1,
-            "title": "1회차 모의고사",
-            "description": "Python 기초 문법 및 자료형",
-            "colabUrl": "https://colab.research.google.com/drive/example-1",
+            "title": "AICE 실기 모의고사 1회",
+            "description": "내비게이션 주행 데이터 기반 목적지 도착 시간 예측 - Decision Tree 회귀 및 딥러닝 MLP",
+            "colabUrl": "https://velog.io/@junseyeon/AICE-associate-%EC%83%98%ED%94%8C%EB%AC%B8%ED%95%AD-%ED%92%80%EC%9D%B4",
             "solutionUrl": "../solutions/aice-01.md",
-            "lectureUrl": "https://example.com/lecture/1"
+            "lectureUrl": "https://velog.io/@junseyeon/AICE-associate-%EC%83%98%ED%94%8C%EB%AC%B8%ED%95%AD-%ED%92%80%EC%9D%B4"
         },
         {
             "id": 2,
-            "title": "2회차 모의고사",
-            "description": "NumPy 라이브러리 활용",
-            "colabUrl": "https://colab.research.google.com/drive/example-2",
+            "title": "AICE 실기 모의고사 2회",
+            "description": "항공사 고객 만족도 예측 - 다중 알고리즘 비교 및 딥러닝 DNN 최적화",
+            "colabUrl": "https://blog.naver.com/yiyangse/223488690089",
             "solutionUrl": "../solutions/aice-02.md",
-            "lectureUrl": "https://example.com/lecture/2"
+            "lectureUrl": "https://blog.naver.com/yiyangse/223488690089"
         },
         {
             "id": 3,
-            "title": "3회차 모의고사",
-            "description": "Pandas 데이터 처리",
-            "colabUrl": "https://colab.research.google.com/drive/example-3",
-            "solutionUrl": "../solutions/aice-03.md",
-            "lectureUrl": "https://example.com/lecture/3"
+            "title": "빅데이터분석기사 실기 모의고사 1회",
+            "description": "제7회 기출 복원 (2023.12.02) - 전처리, 모델링, 통계검정",
+            "colabUrl": "https://lab.statisticsplaybook.com/bae-exam-7/",
+            "solutionUrl": "../solutions/bigdata-01.md",
+            "lectureUrl": "https://lab.statisticsplaybook.com/bae-exam-7/"
         },
         {
             "id": 4,
-            "title": "4회차 모의고사",
-            "description": "데이터 시각화 (Matplotlib, Seaborn)",
-            "colabUrl": "https://colab.research.google.com/drive/example-4",
-            "solutionUrl": "../solutions/aice-04.md",
-            "lectureUrl": "https://example.com/lecture/4"
-        },
-        {
-            "id": 5,
-            "title": "5회차 모의고사",
-            "description": "통계 분석 기초",
-            "colabUrl": "https://colab.research.google.com/drive/example-5",
-            "solutionUrl": "../solutions/aice-05.md",
-            "lectureUrl": "https://example.com/lecture/5"
-        },
-        {
-            "id": 6,
-            "title": "6회차 모의고사",
-            "description": "머신러닝 기초 (Scikit-learn)",
-            "colabUrl": "https://colab.research.google.com/drive/example-6",
-            "solutionUrl": "../solutions/aice-06.md",
-            "lectureUrl": "https://example.com/lecture/6"
-        },
-        {
-            "id": 7,
-            "title": "7회차 모의고사",
-            "description": "딥러닝 기초 (TensorFlow/Keras)",
-            "colabUrl": "https://colab.research.google.com/drive/example-7",
-            "solutionUrl": "../solutions/aice-07.md",
-            "lectureUrl": "https://example.com/lecture/7"
-        },
-        {
-            "id": 8,
-            "title": "8회차 모의고사",
-            "description": "실전 데이터 분석 프로젝트",
-            "colabUrl": "https://colab.research.google.com/drive/example-8",
-            "solutionUrl": "../solutions/aice-08.md",
-            "lectureUrl": "https://example.com/lecture/8"
+            "title": "빅데이터분석기사 실기 모의고사 2회",
+            "description": "제10회 기출 기반 (2025.06.21) - 변형 문제 및 실습",
+            "colabUrl": "https://lab.statisticsplaybook.com/bae-exam-10/",
+            "solutionUrl": "../solutions/bigdata-02.md",
+            "lectureUrl": "https://lab.statisticsplaybook.com/bae-exam-10/"
         }
     ]
 }
