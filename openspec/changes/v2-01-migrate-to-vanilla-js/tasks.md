@@ -97,11 +97,13 @@
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_5_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.6 Phase 1 단위 테스트
-- [ ] 1.6.1 모든 HTML 파일 문법 검증 (W3C Validator)
-- [ ] 1.6.2 CSS 파일 구문 오류 없음 확인
-- [ ] 1.6.3 js/common.js 유틸리티 함수 테스트
-- [ ] 1.6.4 js/device-detect.js 디바이스 감지 로직 테스트
-- [ ] 1.6.5 js/storage.js Local Storage 래퍼 함수 테스트
+- [x] 1.6.1 모든 HTML 파일 문법 검증 (W3C Validator)
+- [x] 1.6.2 CSS 파일 구문 오류 없음 확인
+- [x] 1.6.3 js/common.js 유틸리티 함수 테스트
+- [x] 1.6.4 js/device-detect.js 디바이스 감지 로직 테스트
+- [x] 1.6.5 js/storage.js Local Storage 래퍼 함수 테스트
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_6_완료내역.md` 작성 후 커밋/푸시
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_6_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_6_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_6_완료내역.md` 작성 후 커밋/푸시
 
