@@ -83,9 +83,11 @@
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_3_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.4 기본 JS 구조 작성
-- [ ] 1.4.1 js/common.js (공통 유틸리티 함수)
-- [ ] 1.4.2 js/device-detect.js (모바일/PC 감지 로직)
-- [ ] 1.4.3 js/storage.js (Local Storage 래퍼 함수)
+- [x] 1.4.1 js/common.js (공통 유틸리티 함수)
+- [x] 1.4.2 js/device-detect.js (모바일/PC 감지 로직)
+- [x] 1.4.3 js/storage.js (Local Storage 래퍼 함수)
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_4_완료내역.md` 작성 후 커밋/푸시
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_4_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_4_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.5 개발 환경 설정
