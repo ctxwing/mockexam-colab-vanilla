@@ -16,13 +16,14 @@ function initOtpInput() {
         input.addEventListener('input', (e) => {
             const value = e.target.value;
 
-            // 숫자만 허용
-            if (!/^\d*$/.test(value)) {
-                e.target.value = '';
+            // 영문+숫자만 허용하고 자동으로 대문자 변환
+            const filtered = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+            if (filtered !== value) {
+                e.target.value = filtered;
                 return;
             }
 
-            if (value.length === 1) {
+            if (filtered.length === 1) {
                 // 다음 입력 필드로 포커스 이동
                 if (index < otpInputs.length - 1) {
                     otpInputs[index + 1].focus();
@@ -46,24 +47,21 @@ function initOtpInput() {
         // 붙여넣기 이벤트 처리
         input.addEventListener('paste', (e) => {
             e.preventDefault();
-            const pasteData = e.clipboardData.getData('text').replace(/\D/g, '');
+            // 하이픈 제거하고 영문+숫자만 추출 후 대문자 변환
+            const pasteData = e.clipboardData.getData('text')
+                .replace(/[^a-zA-Z0-9]/g, '')
+                .toUpperCase();
 
-            if (pasteData.length === 8) {
-                // 8자리 숫자를 각 입력란에 분배
+            if (pasteData.length > 0) {
+                // 항상 첫 번째 입력란부터 순차적으로 분배
                 pasteData.split('').forEach((char, i) => {
-                    if (otpInputs[i]) otpInputs[i].value = char;
+                    if (i < otpInputs.length) {
+                        otpInputs[i].value = char;
+                    }
                 });
-                // 첫 번째 입력란에 포커스 (일관성 유지)
-                otpInputs[0].focus();
-            } else if (pasteData.length > 0) {
-                // 8자리가 아닌 경우 입력란에 순차적으로 입력
-                const startIndex = index;
-                for (let i = 0; i < pasteData.length && startIndex + i < otpInputs.length; i++) {
-                    otpInputs[startIndex + i].value = pasteData[i];
-                }
-                // 마지막 입력된 다음 칸으로 포커스
-                const nextIndex = Math.min(startIndex + pasteData.length, otpInputs.length - 1);
-                otpInputs[nextIndex].focus();
+                // 마지막으로 입력된 칸에 포커스 (또는 모두 채워졌으면 마지막 칸)
+                const lastIndex = Math.min(pasteData.length, otpInputs.length) - 1;
+                otpInputs[Math.max(0, lastIndex)].focus();
             }
         });
     });
@@ -100,16 +98,30 @@ function initOtpInput() {
 }
 
 /**
- * OTP 검증
+ * 문자열 SHA-256 해시 생성 (브라우저 네이티브 Web Crypto API)
+ * @param {string} text - 해싱할 텍스트
+ * @returns {Promise<string>}
+ */
+async function sha256(text) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text.toUpperCase());
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * OTP 검증 (SHA-256 해시 비교)
  * @param {string} otp - 8자리 OTP 코드
  * @returns {Promise<boolean>}
  */
 async function verifyOtp(otp) {
     try {
         const otpList = await loadJson('../data/otp-list.json');
-        // 대소문자 무시하고 비교
-        const normalizedOtp = otp.toLowerCase();
-        return otpList.codes?.some(code => code.toLowerCase() === normalizedOtp) || false;
+        // 입력된 OTP의 해시 생성
+        const otpHash = await sha256(otp);
+        // 저장된 해시 목록과 비교
+        return otpList.hashes?.includes(otpHash) || false;
     } catch (error) {
         console.error('OTP 검증 실패:', error);
         return false;

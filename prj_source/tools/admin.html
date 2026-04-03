@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 로그인</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .login-box { background: #252526; padding: 40px; border-radius: 8px; border: 1px solid #3c3c3c; text-align: center; }
+        h1 { color: #4ec9b0; margin-top: 0; }
+        input { padding: 12px; font-size: 16px; width: 250px; background: #1e1e1e; color: #d4d4d4; border: 1px solid #3c3c3c; border-radius: 4px; }
+        button { padding: 12px 24px; background: #0e639c; color: white; border: none; cursor: pointer; font-size: 16px; border-radius: 4px; margin-top: 10px; }
+        button:hover { background: #1177bb; }
+        .error { color: #f48771; margin-top: 10px; min-height: 20px; }
+        .locked { color: #ce9178; font-size: 12px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>🔐 관리자 인증</h1>
+        <input type="password" id="password" placeholder="관리자 비밀번호" onkeypress="if(event.key==='Enter') login()">
+        <br>
+        <button onclick="login()">로그인</button>
+        <div class="error" id="error"></div>
+        <div class="locked">🔒 OTP 해시 생성 도구</div>
+    </div>
+
+    <script>
+        // SHA-256 해시 함수
+        async function sha256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // 설정된 비밀번호 해시 (기본값: admin123)
+        // 관리자가 변경하려면 이 해시값을 새로운 비밀번호의 해시로 교체
+        const PASSWORD_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
+
+        async function login() {
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
+
+            if (!password) {
+                errorDiv.textContent = '비밀번호를 입력해주세요.';
+                return;
+            }
+
+            const hash = await sha256(password);
+
+            if (hash === PASSWORD_HASH) {
+                // 인증 성공 - 세션 저장소에 인증 상태 저장
+                sessionStorage.setItem('adminAuth', 'true');
+                sessionStorage.setItem('authTime', Date.now().toString());
+                // OTP 해시 생성 도구로 이동
+                window.location.href = 'generate-otp-hashes.html';
+            } else {
+                errorDiv.textContent = '비밀번호가 올바르지 않습니다.';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        // 페이지 로드 시 이미 인증되어 있는지 확인
+        window.onload = function() {
+            const auth = sessionStorage.getItem('adminAuth');
+            const authTime = sessionStorage.getItem('authTime');
+
+            // 30분 이내 인증이 유효하면 바로 이동
+            if (auth === 'true' && authTime) {
+                const elapsed = Date.now() - parseInt(authTime);
+                if (elapsed < 30 * 60 * 1000) { // 30분
+                    window.location.href = 'generate-otp-hashes.html';
+                } else {
+                    sessionStorage.removeItem('adminAuth');
+                    sessionStorage.removeItem('authTime');
+                }
+            }
+        };
+    </script>
+</body>
+</html>

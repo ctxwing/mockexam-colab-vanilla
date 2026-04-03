@@ -43,3 +43,6 @@ venv/
 *.tmp
 *.temp
 .cache/
+
+# OTP 원본 코드 (보안: 배포 시 해시만 포함)
+data/otp-codes.json

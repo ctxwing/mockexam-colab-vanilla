@@ -142,3 +142,29 @@ function formatDate(date, format = 'YYYY-MM-DD') {
         .replace('MM', String(d.getMonth() + 1).padStart(2, '0'))
         .replace('DD', String(d.getDate()).padStart(2, '0'));
 }
+
+/**
+ * 인증된 사용자인지 확인하고 로비로 리다이렉트
+ * @returns {boolean} - 인증된 경우 true
+ */
+function redirectIfAuthenticated() {
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    if (token) {
+        window.location.href = 'lobby.html';
+        return true;
+    }
+    return false;
+}
+
+/**
+ * 인증된 사용자인지 확인하고 로비로 리다이렉트
+ * @returns {boolean} - 인증된 경우 true
+ */
+function redirectIfAuthenticated() {
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    if (token) {
+        window.location.href = 'lobby.html';
+        return true;
+    }
+    return false;
+}
