@@ -74,10 +74,12 @@
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_2_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.3 기본 CSS 구조 작성
-- [ ] 1.3.1 css/reset.css (CSS 초기화)
-- [ ] 1.3.2 css/variables.css (CSS 변수 정의 - 컬러, 폰트, 간격)
-- [ ] 1.3.3 css/common.css (공통 컴포넌트 스타일)
-- [ ] 1.3.4 css/responsive.css (반응형 미디어 쿼리)
+- [x] 1.3.1 css/reset.css (CSS 초기화)
+- [x] 1.3.2 css/variables.css (CSS 변수 정의 - 컬러, 폰트, 간격)
+- [x] 1.3.3 css/common.css (공통 컴포넌트 스타일)
+- [x] 1.3.4 css/responsive.css (반응형 미디어 쿼리)
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_3_완료내역.md` 작성 후 커밋/푸시
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_3_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_3_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.4 기본 JS 구조 작성

@@ -1,0 +1,141 @@
+/* Responsive Styles */
+
+/* Tablet (768px - 1023px) */
+@media (max-width: 1023px) {
+    .exam-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .lobby-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .gnb-container {
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        order: 3;
+        max-width: 100%;
+        margin: var(--spacing-md) 0 0;
+    }
+}
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+    :root {
+        --font-size-base: 0.875rem;
+        --font-size-lg: 1rem;
+        --font-size-xl: 1.125rem;
+        --font-size-2xl: 1.25rem;
+        --font-size-3xl: 1.5rem;
+    }
+
+    .auth-container {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+
+    .otp-input {
+        width: 35px;
+        height: 45px;
+    }
+
+    .gnb-container {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .gnb-logo img {
+        height: 28px;
+    }
+
+    .search-box input {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-xs);
+    }
+
+    .lobby-container {
+        padding: var(--spacing-md);
+    }
+
+    .exam-cards {
+        gap: var(--spacing-md);
+    }
+
+    .exam-card {
+        padding: var(--spacing-md);
+    }
+
+    .exam-card-actions {
+        flex-direction: column;
+    }
+
+    .exam-card-actions .btn {
+        width: 100%;
+    }
+
+    .learning-container {
+        padding: var(--spacing-md);
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons .btn {
+        width: 100%;
+    }
+
+    .header-container {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .mobile-intro-container {
+        padding: var(--spacing-md);
+    }
+
+    .book-cover {
+        width: 150px;
+    }
+
+    /* Touch target minimum size */
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    a, button {
+        min-height: 44px;
+    }
+}
+
+/* Small Mobile (max-width: 374px) */
+@media (max-width: 374px) {
+    .otp-input {
+        width: 30px;
+        height: 40px;
+        font-size: var(--font-size-lg);
+    }
+
+    .otp-hyphen {
+        font-size: var(--font-size-lg);
+    }
+}
+
+/* Print Styles */
+@media print {
+    .gnb,
+    .sidebar,
+    .action-buttons,
+    .btn {
+        display: none !important;
+    }
+
+    body {
+        color: black;
+        background: white;
+    }
+}
