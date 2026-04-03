@@ -53,8 +53,30 @@ function initOtpInput() {
                 pasteData.split('').forEach((char, i) => {
                     if (otpInputs[i]) otpInputs[i].value = char;
                 });
-                // 마지막 입력란에 포커스
-                otpInputs[7].focus();
+                // 첫 번째 입력란에 포커스 (일관성 유지)
+                otpInputs[0].focus();
+            } else if (pasteData.length > 0) {
+                // 8자리가 아닌 경우 입력란에 순차적으로 입력
+                const startIndex = index;
+                for (let i = 0; i < pasteData.length && startIndex + i < otpInputs.length; i++) {
+                    otpInputs[startIndex + i].value = pasteData[i];
+                }
+                // 마지막 입력된 다음 칸으로 포커스
+                const nextIndex = Math.min(startIndex + pasteData.length, otpInputs.length - 1);
+                otpInputs[nextIndex].focus();
+            }
+        });
+                // 첫 번째 입력란에 포커스 (일관성 유지)
+                otpInputs[0].focus();
+            } else if (pasteData.length > 0) {
+                // 8자리가 아닌 경우 입력란에 순차적으로 입력
+                const startIndex = index;
+                for (let i = 0; i < pasteData.length && startIndex + i < otpInputs.length; i++) {
+                    otpInputs[startIndex + i].value = pasteData[i];
+                }
+                // 마지막 입력된 다음 칸으로 포커스
+                const nextIndex = Math.min(startIndex + pasteData.length, otpInputs.length - 1);
+                otpInputs[nextIndex].focus();
             }
         });
     });
