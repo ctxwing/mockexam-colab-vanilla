@@ -81,15 +81,26 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
     margin-bottom: var(--spacing-lg);
 }
 
 .otp-input {
-    width: 40px;
-    height: 50px;
+    width: 36px;
+    height: 48px;
     text-align: center;
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: border-color var(--transition-base);
+}
+
+.otp-input {
+    width: 36px;
+    height: 48px;
+    text-align: center;
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     border: 2px solid var(--color-border);
     border-radius: var(--radius-md);
