@@ -1,0 +1,133 @@
+# AICE 실기 모의고사 1회 정답 및 해설
+
+본 해설은 AICE Associate 샘플 문항을 바탕으로 작성되었습니다.
+내비게이션 주행 데이터를 분석하여 목적지 도착 시간을 예측하는 태스크를 다룹니다.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 참고 링크
+https://velog.io/@junseyeon/AICE-associate-샘플문항-풀이
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 📋 [Part 1] 데이터 탐색 및 전처리
+
+### 1. 데이터 로드 및 시각화
+
+주행 데이터(A0007IT.json)를 로드하고 주요 변수의 분포를 확인합니다.
+
+[코드]
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# 데이터 로드
+df = pd.read_json('A0007IT.json')
+
+# Address1 컬럼 분포 확인
+sns.countplot(x='Address1', data=df)
+plt.show()
+
+# 주행 시간 vs 주행 속도 관계
+sns.jointplot(x='Time_Driving', y='Speed_Per_Hour', data=df)
+plt.show()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 2. 데이터 정제 (Cleaning)
+
+이상치와 결측치를 처리합니다.
+
+[코드]
+# 유효하지 않은 주소 제거
+df = df[df['Address1'] != '-']
+
+# 주행 속도 이상치 처리 (300km/h 초과 제거)
+df = df[df['Speed_Per_Hour'] <= 300]
+
+# 결측치 제거
+df = df.dropna()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+### 3. 피처 엔지니어링
+
+모델 학습에 불필요한 컬럼을 제거하고 범주형 변수를 인코딩합니다.
+
+[코드]
+# 불필요한 시간 컬럼 제거
+df = df.drop(['Time_Departure', 'Time_Arrival'], axis=1)
+
+# 원-핫 인코딩
+df = pd.get_dummies(df, columns=['Address1', 'Address2'], drop_first=True)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🤖 [Part 2] 머신러닝 모형 구축
+
+### 4. 의사결정나무(Decision Tree) 예측
+
+도착 시간(Regression)을 예측하는 모델을 학습합니다.
+
+[코드]
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_absolute_error
+
+# 데이터 분리 (80:20)
+X = df.drop('Time_Driving', axis=1)
+y = df['Time_Driving']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 모델 학습
+model = DecisionTreeRegressor(max_depth=5)
+model.fit(X_train, y_train)
+
+# 평가
+pred = model.predict(X_test)
+print(f"MAE: {mean_absolute_error(y_test, pred)}")
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 🧠 [Part 3] 딥러닝 모형 구축
+
+### 5. MLP(Multi-Layer Perceptron) 모델
+
+TensorFlow/Keras를 사용하여 신경망 모델을 구축합니다.
+
+[코드]
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
+
+# 모델 스택 구성
+model = Sequential([
+    Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+    Dropout(0.2),
+    Dense(32, activation='relu'),
+    Dense(1)  # 회귀 출력을 위한 유닛 1개
+])
+
+# 컴파일 및 학습
+model.compile(optimizer='adam', loss='mse')
+history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=30, batch_size=32)
+
+# 학습 곡선 시각화
+plt.plot(history.history['loss'], label='train_loss')
+plt.plot(history.history['val_loss'], label='val_loss')
+plt.legend()
+plt.show()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 💡 핵심 포인트 정리
+
+1. 데이터 탐색: 시각화를 통해 변수 분포와 관계 파악
+2. 전처리: 이상치 제거, 결측치 처리, 인코딩
+3. 모델링: 의사결정나무로 기본 성능 확인
+4. 딥러닝: MLP로 성능 개선 시도
+5. 평가: MAE, MSE 등 회귀 평가지표 활용
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+문서 끝
