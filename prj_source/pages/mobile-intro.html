@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICE 모의고사 - 모바일 안내</title>
+    <meta property="og:title" content="AICE 모의고사">
+    <meta property="og:description" content="Python 모의고사 학습 플랫폼">
+    <meta property="og:image" content="../assets/images/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../assets/icons/favicon.ico">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <main class="mobile-intro">
+        <div class="mobile-intro-container">
+            <header class="mobile-header">
+                <img src="../assets/images/aice-logo.png" alt="AICE 로고" class="mobile-logo">
+            </header>
+
+            <section class="book-section">
+                <img src="../assets/images/book-cover.png" alt="도서 표지" class="book-cover">
+            </section>
+
+            <section class="message-section">
+                <p class="intro-message">PC 실습 환경에 최적화된 서비스입니다</p>
+            </section>
+
+            <section class="action-section">
+                <button id="copy-url-btn" class="btn btn-ghost">URL 복사</button>
+                <button id="kakao-share-btn" class="btn btn-orange">카카오톡으로 링크 보내기</button>
+            </section>
+
+            <div id="toast-message" class="toast" style="display: none;">
+                URL이 클립보드에 복사되었습니다.
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/mobile.js"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+</body>
+</html>

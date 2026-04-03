@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICE 모의고사 - 로비</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <header class="gnb">
+        <div class="gnb-container">
+            <div class="gnb-logo">
+                <a href="lobby.html">
+                    <img src="../assets/images/aice-logo.png" alt="AICE 로고">
+                </a>
+            </div>
+            <div class="search-box">
+                <input type="search" id="search-input" placeholder="허용 라이브러리(NumPy, pandas 등) 문서 검색">
+            </div>
+            <nav class="user-menu">
+                <button id="logout-btn" class="btn btn-ghost">로그아웃</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="lobby-container">
+        <main class="exam-list">
+            <div id="exam-cards" class="exam-cards">
+                <!-- 동적으로 생성될 카드 영역 -->
+            </div>
+            <div id="loading" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>학습 데이터를 불러오는 중...</p>
+            </div>
+            <div id="error" class="error" style="display: none;">
+                <p>데이터를 불러오는 중 오류가 발생했습니다.</p>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3>회차 바로가기</h3>
+                <ul id="quick-nav" class="quick-nav">
+                    <!-- 동적으로 생성될 네비게이션 -->
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h3>내 점수 기록</h3>
+                <ul id="score-history" class="score-history">
+                    <!-- 동적으로 생성될 학습 이력 -->
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/lobby.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICE 모의고사 - 학습 화면</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+    <header class="learning-header">
+        <div class="header-container">
+            <a href="lobby.html" class="btn btn-ghost btn-back">← 로비로 돌아가기</a>
+            <h1 id="exam-title" class="exam-title">회차 제목</h1>
+        </div>
+    </header>
+
+    <main class="learning-container">
+        <div class="action-buttons">
+            <a id="colab-btn" href="#" target="_blank" class="btn btn-primary">Google Colab 실습</a>
+            <button id="solution-toggle-btn" class="btn btn-secondary">정답 및 해설 보기</button>
+            <a id="lecture-btn" href="#" target="_blank" class="btn btn-secondary">해설 강의 수강</a>
+        </div>
+
+        <section class="problems-section">
+            <h2>문제</h2>
+            <div id="problems-list" class="problems-list">
+                <!-- 동적으로 생성될 문제 목록 -->
+            </div>
+        </section>
+
+        <section id="solution-section" class="solution-section" style="display: none;">
+            <h2>정답 및 해설</h2>
+            <div id="solution-content" class="solution-content">
+                <!-- 동적으로 로드될 해설 내용 -->
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/storage.js"></script>
+    <script src="../js/learning.js"></script>
+</body>
+</html>

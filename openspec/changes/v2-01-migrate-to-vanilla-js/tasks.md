@@ -64,11 +64,13 @@
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_1_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.2 기본 HTML 템플릿 생성
-- [ ] 1.2.1 index.html (메인 진입점 - 디바이스 감지 리다이렉트)
-- [ ] 1.2.2 pages/auth.html (도서 인증 페이지)
-- [ ] 1.2.3 pages/lobby.html (모의고사 로비 페이지)
-- [ ] 1.2.4 pages/learning.html (학습 화면 페이지)
-- [ ] 1.2.5 pages/mobile-intro.html (모바일 안내 페이지)
+- [x] 1.2.1 index.html (메인 진입점 - 디바이스 감지 리다이렉트)
+- [x] 1.2.2 pages/auth.html (도서 인증 페이지)
+- [x] 1.2.3 pages/lobby.html (모의고사 로비 페이지)
+- [x] 1.2.4 pages/learning.html (학습 화면 페이지)
+- [x] 1.2.5 pages/mobile-intro.html (모바일 안내 페이지)
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_2_완료내역.md` 작성 후 커밋/푸시
+> 📌 완료 시: `3_prj_docs/완료내역/TASK_1_2_완료내역.md` 작성 후 커밋/푸시
 > 📌 완료 시: `3_prj_docs/완료내역/TASK_1_2_완료내역.md` 작성 후 커밋/푸시
 
 ### 1.3 기본 CSS 구조 작성
