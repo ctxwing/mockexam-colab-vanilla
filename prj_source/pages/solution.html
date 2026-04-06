@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정답 및 해설</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .solution-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .solution-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .solution-header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .solution-header .exam-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        .solution-content {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            line-height: 1.8;
+        }
+        .solution-content h1 {
+            font-size: 1.8rem;
+            margin: 30px 0 15px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .solution-content h2 {
+            font-size: 1.5rem;
+            margin: 25px 0 12px;
+            color: var(--text-primary);
+        }
+        .solution-content h3 {
+            font-size: 1.3rem;
+            margin: 20px 0 10px;
+            color: var(--text-secondary);
+        }
+        .solution-content p {
+            margin-bottom: 15px;
+        }
+        .solution-content pre {
+            background: var(--bg-dark);
+            color: var(--code-text);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .solution-content code {
+            background: var(--bg-dark);
+            color: var(--code-text);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .solution-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+        .solution-content ul,
+        .solution-content ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        .solution-content li {
+            margin-bottom: 8px;
+        }
+        .solution-content strong {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .solution-content em {
+            font-style: italic;
+        }
+        .solution-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 25px 0;
+        }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: var(--error-color);
+            background: var(--bg-error);
+            border-radius: var(--border-radius);
+        }
+    </style>
+</head>
+<body>
+    <div class="solution-container">
+        <a href="lobby.html" class="btn btn-ghost back-button">← 로비로 돌아가기</a>
+
+        <div class="solution-header">
+            <h1 id="solution-title">정답 및 해설</h1>
+            <p id="solution-description" class="exam-description"></p>
+        </div>
+
+        <div id="solution-content" class="solution-content">
+            <div class="loading">해설을 불러오는 중...</div>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/storage.js"></script>
+    <script>
+        (async function() {
+            const examId = getUrlParam('exam');
+
+            if (!examId) {
+                document.getElementById('solution-content').innerHTML =
+                    '<div class="error">시험 ID가 없습니다.</div>';
+                return;
+            }
+
+            try {
+                // 시험 데이터 로드
+                const data = await loadJson('../data/exams.json');
+                const exam = data.exams.find(e => e.id === parseInt(examId));
+
+                if (!exam) {
+                    document.getElementById('solution-content').innerHTML =
+                        '<div class="error">시험을 찾을 수 없습니다.</div>';
+                    return;
+                }
+
+                // 헤더 정보 표시
+                document.getElementById('solution-title').textContent = exam.title + ' - 정답 및 해설';
+                document.getElementById('solution-description').textContent = exam.description;
+
+                // 해설 파일 로드
+                const response = await fetch(exam.solutionUrl);
+                if (!response.ok) {
+                    throw new Error('해설 파일을 찾을 수 없습니다.');
+                }
+                const markdown = await response.text();
+
+                // 마크다운을 HTML로 변환
+                const html = markdownToHtml(markdown);
+                document.getElementById('solution-content').innerHTML = html;
+
+            } catch (error) {
+                console.error('해설 로드 실패:', error);
+                document.getElementById('solution-content').innerHTML =
+                    `<div class="error">해설을 불러오는 중 오류가 발생했습니다.<br>${error.message}</div>`;
+            }
+        })();
+    </script>
+</body>
+</html>

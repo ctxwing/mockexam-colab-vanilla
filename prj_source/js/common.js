@@ -148,8 +148,7 @@ function formatDate(date, format = 'YYYY-MM-DD') {
  * @returns {boolean} - 인증된 경우 true
  */
 function redirectIfAuthenticated() {
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    if (token) {
+    if (isAuthenticated()) {
         window.location.href = 'lobby.html';
         return true;
     }
@@ -157,14 +156,14 @@ function redirectIfAuthenticated() {
 }
 
 /**
- * 인증된 사용자인지 확인하고 로비로 리다이렉트
- * @returns {boolean} - 인증된 경우 true
+ * 인증이 필요한 페이지에서 인증 상태 확인
+ * 인증되지 않은 경우 auth.html로 리다이렉트
+ * @returns {boolean} - 인증된 경우 true, 인증되지 않은 경우 false
  */
-function redirectIfAuthenticated() {
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    if (token) {
-        window.location.href = 'lobby.html';
-        return true;
+function requireAuth() {
+    if (!isAuthenticated()) {
+        window.location.href = 'auth.html';
+        return false;
     }
-    return false;
+    return true;
 }

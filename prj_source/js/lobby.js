@@ -82,7 +82,7 @@ function renderExamCards(exams, learningHistory) {
                 <div class="exam-card-actions">
                     <a href="${exam.colabUrl}" target="_blank" class="btn btn-primary">Google Colab 실습</a>
                     <a href="learning.html?exam=${exam.id}" class="btn btn-secondary">학습 시작</a>
-                    <a href="${exam.solutionUrl}" target="_blank" class="btn btn-ghost">정답 및 해설</a>
+                    <a href="solution.html?exam=${exam.id}" class="btn btn-ghost">정답 및 해설</a>
                 </div>
             </article>
         `;
